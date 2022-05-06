@@ -142,7 +142,7 @@ const IndexPage = () => {
       </p>
 
 <p style={paragraphStyles}>
-Bridging activists, creatives, and technologists at the intersection of civic, media, and technology drive my curiousity.
+Bridging activists, creatives, and technologists at the intersection of civic, media, and technology drive my curiosity.
 Over the past decade I've worked on some fun projects with 300 Entertainment, Interscope, Funny or Die, and even UnitedHealth. Over the past couple of years I've joined several communities that have been helpful with my development and growth as an artist, organizer, and entrepreneur.
 Special shout out to the Global Shapers Community, Climate Reality, Fedtech, On Deck, & South Park Commons.
 Below are a few of the companies I've worked for.

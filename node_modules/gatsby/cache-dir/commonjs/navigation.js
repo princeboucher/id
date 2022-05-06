@@ -1,5 +1,7 @@
 "use strict";
 
+var _interopRequireWildcard = require("@babel/runtime/helpers/interopRequireWildcard");
+
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 exports.__esModule = true;
@@ -15,9 +17,7 @@ var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _loader = _interopRequireWildcard(require("./loader"));
 
-var _redirectUtils = require("./redirect-utils.js");
-
-exports.maybeGetBrowserRedirect = _redirectUtils.maybeGetBrowserRedirect;
+var _redirects = _interopRequireDefault(require("./redirects.json"));
 
 var _apiRunnerBrowser = require("./api-runner-browser");
 
@@ -25,45 +25,48 @@ var _emitter = _interopRequireDefault(require("./emitter"));
 
 var _routeAnnouncerProps = require("./route-announcer-props");
 
-var _reachRouter = require("@gatsbyjs/reach-router");
+var _router = require("@reach/router");
 
-var _history = require("@gatsbyjs/reach-router/lib/history");
+var _history = require("@reach/router/lib/history");
 
 var _gatsbyLink = require("gatsby-link");
 
-function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function (nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
+// Convert to a map for faster lookup in maybeRedirect()
+const redirectMap = new Map();
+const redirectIgnoreCaseMap = new Map();
 
-function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+_redirects.default.forEach(redirect => {
+  if (redirect.ignoreCase) {
+    redirectIgnoreCaseMap.set(redirect.fromPath, redirect);
+  } else {
+    redirectMap.set(redirect.fromPath, redirect);
+  }
+});
 
 function maybeRedirect(pathname) {
-  const redirect = (0, _redirectUtils.maybeGetBrowserRedirect)(pathname);
-  const {
-    hash,
-    search
-  } = window.location;
+  let redirect = redirectMap.get(pathname);
+
+  if (!redirect) {
+    redirect = redirectIgnoreCaseMap.get(pathname.toLowerCase());
+  }
 
   if (redirect != null) {
-    window.___replace(redirect.toPath + search + hash);
+    if (process.env.NODE_ENV !== `production`) {
+      if (!_loader.default.isPageNotFound(pathname)) {
+        console.error(`The route "${pathname}" matches both a page and a redirect; this is probably not intentional.`);
+      }
+    }
+
+    window.___replace(redirect.toPath);
 
     return true;
   } else {
     return false;
   }
-} // Catch unhandled chunk loading errors and force a restart of the app.
-
-
-let nextRoute = ``;
-window.addEventListener(`unhandledrejection`, event => {
-  if (/loading chunk \d* failed./i.test(event.reason)) {
-    if (nextRoute) {
-      window.location.pathname = nextRoute;
-    }
-  }
-});
+}
 
 const onPreRouteUpdate = (location, prevLocation) => {
   if (!maybeRedirect(location.pathname)) {
-    nextRoute = location.pathname;
     (0, _apiRunnerBrowser.apiRunner)(`onPreRouteUpdate`, {
       location,
       prevLocation
@@ -97,22 +100,26 @@ const navigate = (to, options = {}) => {
     return;
   }
 
-  const {
-    pathname,
-    search,
-    hash
+  let {
+    pathname
   } = (0, _gatsbyLink.parsePath)(to);
-  const redirect = (0, _redirectUtils.maybeGetBrowserRedirect)(pathname); // If we're redirecting, just replace the passed in pathname
+  let redirect = redirectMap.get(pathname);
+
+  if (!redirect) {
+    redirect = redirectIgnoreCaseMap.get(pathname.toLowerCase());
+  } // If we're redirecting, just replace the passed in pathname
   // to the one we want to redirect to.
 
+
   if (redirect) {
-    to = redirect.toPath + search + hash;
+    to = redirect.toPath;
+    pathname = (0, _gatsbyLink.parsePath)(to).pathname;
   } // If we had a service worker update, no matter the path, reload window and
   // reset the pathname whitelist
 
 
   if (window.___swUpdated) {
-    window.location = pathname + search + hash;
+    window.location = pathname;
     return;
   } // Start a timer to wait for a second before transitioning and showing a
   // loader in case resources aren't around yet.
@@ -128,7 +135,7 @@ const navigate = (to, options = {}) => {
     });
   }, 1000);
 
-  _loader.default.loadPage(pathname + search).then(pageResources => {
+  _loader.default.loadPage(pathname).then(pageResources => {
     // If no page resources, then refresh the page
     // Do this, rather than simply `window.location.reload()`, so that
     // pressing the back/forward buttons work - otherwise when pressing
@@ -153,11 +160,11 @@ const navigate = (to, options = {}) => {
           });
         }
 
-        window.location = pathname + search + hash;
+        window.location = pathname;
       }
     }
 
-    (0, _reachRouter.navigate)(to, options);
+    (0, _router.navigate)(to, options);
     clearTimeout(timeoutId);
   });
 };
@@ -176,9 +183,7 @@ function shouldUpdateScroll(prevRouterProps, {
     routerProps: {
       location
     },
-    getSavedScrollPosition: args => [0, // FIXME this is actually a big code smell, we should fix this
-    // eslint-disable-next-line @babel/no-invalid-this
-    this._stateStorage.read(args, args.key)]
+    getSavedScrollPosition: args => [0, this._stateStorage.read(args, args.key)]
   });
 
   if (results.length > 0) {
@@ -219,7 +224,10 @@ function init() {
     replace: true
   });
 
-  window.___navigate = (to, options) => navigate(to, options);
+  window.___navigate = (to, options) => navigate(to, options); // Check for initial page-load redirect
+
+
+  maybeRedirect(window.location.pathname);
 }
 
 class RouteAnnouncer extends _react.default.Component {

@@ -3,7 +3,6 @@
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
 
 exports.__esModule = true;
-exports.getPageChunk = getPageChunk;
 exports.default = void 0;
 
 var _react = _interopRequireDefault(require("react"));
@@ -12,11 +11,8 @@ var _server = require("react-dom/server");
 
 var _lodash = require("lodash");
 
-var _apiRunnerSsr = require("./api-runner-ssr");
+var _apiRunnerSsr = _interopRequireDefault(require("./api-runner-ssr"));
 
-var _asyncRequires = _interopRequireDefault(require("$virtual/async-requires"));
-
-/* global BROWSER_ESM_ONLY */
 // import testRequireError from "./test-require-error"
 // For some extremely mysterious reason, webpack adds the above module *after*
 // this module so that when this code runs, testRequireError is undefined.
@@ -42,9 +38,7 @@ try {
 
 Html = Html && Html.__esModule ? Html.default : Html;
 
-var _default = ({
-  pagePath
-}) => {
+var _default = (pagePath, callback) => {
   let headComponents = [/*#__PURE__*/_react.default.createElement("meta", {
     key: "environment",
     name: "note",
@@ -99,7 +93,7 @@ var _default = ({
     postBodyComponents = components;
   };
 
-  (0, _apiRunnerSsr.apiRunner)(`onRenderBody`, {
+  (0, _apiRunnerSsr.default)(`onRenderBody`, {
     setHeadComponents,
     setHtmlAttributes,
     setBodyAttributes,
@@ -108,7 +102,7 @@ var _default = ({
     setBodyProps,
     pathname: pagePath
   });
-  (0, _apiRunnerSsr.apiRunner)(`onPreRenderHTML`, {
+  (0, _apiRunnerSsr.default)(`onPreRenderHTML`, {
     getHeadComponents,
     replaceHeadComponents,
     getPreBodyComponents,
@@ -123,36 +117,23 @@ var _default = ({
     headComponents: headComponents.concat([/*#__PURE__*/_react.default.createElement("script", {
       key: `io`,
       src: "/socket.io/socket.io.js"
-    }), /*#__PURE__*/_react.default.createElement("link", {
-      key: "styles",
-      rel: "stylesheet",
-      href: "/commons.css"
     })]),
     htmlAttributes,
     bodyAttributes,
     preBodyComponents,
-    postBodyComponents: postBodyComponents.concat([!BROWSER_ESM_ONLY && /*#__PURE__*/_react.default.createElement("script", {
+    postBodyComponents: postBodyComponents.concat([/*#__PURE__*/_react.default.createElement("script", {
       key: `polyfill`,
       src: "/polyfill.js",
       noModule: true
     }), /*#__PURE__*/_react.default.createElement("script", {
-      key: `framework`,
-      src: "/framework.js"
-    }), /*#__PURE__*/_react.default.createElement("script", {
       key: `commons`,
       src: "/commons.js"
-    })].filter(Boolean))
+    })])
   });
 
   htmlStr = (0, _server.renderToStaticMarkup)(htmlElement);
   htmlStr = `<!DOCTYPE html>${htmlStr}`;
-  return htmlStr;
+  callback(null, htmlStr);
 };
 
 exports.default = _default;
-
-function getPageChunk({
-  componentChunkName
-}) {
-  return _asyncRequires.default.components[componentChunkName]();
-}
