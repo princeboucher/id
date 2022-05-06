@@ -57,7 +57,7 @@ const descriptionStyle = {
 }
 
 const docLink = {
-  text: "Experience",
+  text: "Previous Experience",
   url: "https://www.linkedin.com/in/princeboucher",
   color: "#8954A8",
 }
