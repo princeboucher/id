@@ -3,19 +3,21 @@ import * as React from "react"
 // styles
 const pageStyles = {
   color: "#232129",
-  padding: 96,
+  padding: 50,
   fontFamily: "-apple-system, Roboto, sans-serif, serif",
 }
 const headingStyles = {
   marginTop: 0,
   marginBottom: 64,
-  maxWidth: 320,
+  maxWidth: 120,
 }
 const headingAccentStyles = {
   color: "#663399",
 }
 const paragraphStyles = {
   marginBottom: 48,
+  lineHeight: 1.5,
+  maxWidth: 560,
 }
 const codeStyles = {
   color: "#8A6534",
@@ -36,7 +38,7 @@ const listItemStyles = {
 }
 
 const linkStyle = {
-  color: "#8954A8",
+  color: "#0f4c81",
   fontWeight: "bold",
   fontSize: 16,
   verticalAlign: "5%",
@@ -66,7 +68,7 @@ const badgeStyle = {
   color: "#fff",
   backgroundColor: "#088413",
   border: "1px solid #088413",
-  fontSize: 11,
+  fontSize: 12,
   fontWeight: "bold",
   letterSpacing: 1,
   borderRadius: 4,
@@ -85,35 +87,35 @@ const links = [
     url: "https://www.vana.xyz",
     description:
       "To shift the flow of data for a more prosperous world.",
-    color: "#E95800",
+    color: "#000000",
   },
   {
     text: "Unit21: Sr Growth Marketing Manager",
     url: "https://www.unit21.ai",
     description:
       "Unit21 is a fully customizable platform that provides unprecedented control to reduce fraud loss by 50%+ and false positives by 85%+. The platform seamlessly integrates three products that can be used together or individually: Transaction Monitoring, Case Management, and Onboarding Orchestration.",
-    color: "#1099A8",
+    color: "#000000",
   },
   {
     text: "U.S. Digital Response: Volunteer",
     url: "https://www.gatsbyjs.com/docs/reference/",
     description:
       "Supporting the Critical Needs of the Public. USDR is a nonprofit, nonpartisan organization that helps governments, nonprofits, and public entities respond quickly to critical public needs.",
-    color: "#BC027F",
+    color: "#000000",
   },
   {
     text: "South Park Commons: Community Member & Marketing DRI",
     url: "https://www.southparkcommons.com/",
     description:
       "SPC is a home for the most talented technologists, builders, and domain-experts figuring out what's next—a community designed to turn the chaos of possibility into the clarity of conviction.",
-    color: "#0D96F2",
+    color: "#000000",
   },
   {
     text: "AWS:Intersect: Digital Director",
     url: "https://www.youtube.com/watch?v=KSsnXlaIP0k",
     description:
       "Intersect is a 2-day celebration of music, art, and tech. With 25+ artists including Foo Fighters, Kacey Musgraves, Beck, and Anderson .Paak. Featuring art installations from Nonotak, Beeple, Kyttenjanae, Ouchhh, and more.",
-    color: "#8EB814",
+    color: "#000000",
   },
  
 ]
