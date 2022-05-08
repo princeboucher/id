@@ -5,7 +5,7 @@
   "description": "prince-boucher",
   "author": "princeboucher",
   "keywords": [
-    "gatsby"
+    "applied generalist"
   ],
   "scripts": {
     "develop": "gatsby develop",
@@ -15,10 +15,13 @@
     "clean": "gatsby clean"
   },
   "dependencies": {
-    "gatsby": "^2.19.38",
+    "3.0.0": "^3.0.0",
+    "gatsby": "^4.13.1",
+    "gatsby-plugin-sharp": "^2.14.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "uuid": "^8.3.2",
-    "web3.storage": "^4.2.0"
+    "web3.storage": "^4.2.0",
+    "webpack": "^5.72.0"
   }
 }
