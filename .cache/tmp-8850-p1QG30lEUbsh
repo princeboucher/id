@@ -1,5 +1,0 @@
-
-    const cmd = require("/Users/zcoolx/Developer/id/node_modules/gatsby/dist/commands/develop-process.js");
-    const args = {"_":["develop"],"verbose":false,"no-color":false,"no-colors":false,"noColors":false,"noColor":false,"json":false,"H":"localhost","host":"localhost","p":"8000","port":58832,"c":"","cert-file":"","certFile":"","k":"","key-file":"","keyFile":"","ca-file":"","caFile":"","graphql-tracing":false,"graphqlTracing":false,"$0":"gatsby","directory":"/Users/zcoolx/Developer/id","browserslist":[">0.25%","not dead"],"sitePackageJson":{"name":"prince-boucher","version":"1.0.0","private":true,"description":"prince-boucher","author":"princeboucher","keywords":["applied generalist"],"scripts":{"develop":"gatsby develop","start":"gatsby develop","build":"gatsby ./build.sh","serve":"gatsby serve","clean":"gatsby clean"},"dependencies":{"3.0.0":"^3.0.0","gatsby":"^4.13.1","gatsby-plugin-sharp":"^2.14.4","react":"^17.0.1","react-dom":"^17.0.1","uuid":"^8.3.2","web3.storage":"^4.2.0"},"devDependencies":{"webpack":"^5.72.0","webpack-cli":"^4.9.2"}},"report":{"errorMap":{}},"useYarn":false,"proxyPort":8001,"ssl":null,"debugInfo":null};
-    cmd(args);
-  
