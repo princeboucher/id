@@ -97,7 +97,7 @@ const links = [
     color: "#000000",
   },
   {
-    text: "U.S. Digital Response: Volunteer",
+    text: "US Digital Response: Volunteer",
     url: "https://www.gatsbyjs.com/docs/reference/",
     description:
       "Supporting the Critical Needs of the Public. USDR is a nonprofit, nonpartisan organization that helps governments, nonprofits, and public entities respond quickly to critical public needs.",
